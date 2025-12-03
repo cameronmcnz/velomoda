@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VelaModa | Nuit Vélo Race</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            background-attachment: fixed;
+        }
+        .race-hero {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            align-items: center;
+            gap: 2.5rem;
+            margin: 4rem auto;
+            max-width: 1080px;
+        }
+        .race-hero img {
+            width: 100%;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 70px rgba(10, 0, 8, 0.45);
+        }
+        .race-meta {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .race-meta div {
+            padding: 1.5rem;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .race-schedule {
+            margin: 5rem auto;
+            max-width: 960px;
+        }
+        .race-schedule table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .race-schedule th,
+        .race-schedule td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .race-schedule th {
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.75rem;
+            color: var(--petal-deep);
+        }
+        .cta-bar {
+            max-width: 720px;
+            margin: 4rem auto 6rem;
+            padding: 2rem;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: linear-gradient(135deg, rgba(253, 231, 239, 0.5), rgba(82, 34, 58, 0.7));
+            text-align: center;
+        }
+        .cta-bar button {
+            margin: 0.75rem;
+        }
+        .click-race {
+            max-width: 1080px;
+            margin: 5rem auto;
+            padding: 3rem;
+            border-radius: 32px;
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            background: rgba(8, 0, 12, 0.45);
+            box-shadow: inset 0 0 40px rgba(253, 231, 239, 0.08);
+        }
+        .click-race header {
+            margin-bottom: 2rem;
+        }
+        .click-race .race-arena {
+            position: relative;
+            height: 220px;
+            border-radius: 26px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 10%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.05) 90%);
+            overflow: hidden;
+        }
+        .finish-line {
+            position: absolute;
+            top: 0;
+            right: 40px;
+            width: 12px;
+            height: 100%;
+            background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 100% 20px;
+        }
+        .track-label {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            writing-mode: vertical-rl;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.65rem;
+            color: var(--petal-deep);
+        }
+        .track {
+            position: absolute;
+            inset: 20px 20px 20px 20px;
+        }
+        .rider {
+            position: absolute;
+            display: flex;
+            align-items: flex-end;
+            transform: translateX(var(--offset, 0px));
+            transition: transform 0.15s ease;
+        }
+        .rider[data-rider="mags"] {
+            top: 40px;
+        }
+        .rider[data-rider="player"] {
+            top: 130px;
+        }
+        .rider-visual {
+            position: relative;
+            width: 150px;
+            height: 90px;
+        }
+        .rider-face {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid var(--petal);
+            box-shadow: 0 0 12px rgba(253, 231, 239, 0.45);
+            object-fit: cover;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .bike-scribble {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 62px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .bike-scribble::before,
+        .bike-scribble::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px dashed rgba(255, 255, 255, 0.6);
+        }
+        .bike-scribble::before { left: 10px; }
+        .bike-scribble::after { right: 10px; }
+        .player-face {
+            border-color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--fig);
+            background: rgba(255, 255, 255, 0.85);
+        }
+        .race-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0 1rem;
+        }
+        .race-progress {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--petal-mid);
+        }
+        .race-status {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            color: var(--porcelain);
+        }
+        @media (max-width: 640px) {
+            .race-schedule table,
+            .race-schedule thead,
+            .race-schedule tbody,
+            .race-schedule th,
+            .race-schedule td,
+            .race-schedule tr {
+                display: block;
+            }
+            .race-schedule tr {
+                margin-bottom: 1.5rem;
+            }
+            .race-schedule th {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="logo">VelaModa</div>
+        <nav class="main-nav">
+            <a href="index.html#collections">Collections</a>
+            <a href="index.html#lookbook">Lookbook</a>
+            <a href="index.html#stories">Stories</a>
+        </nav>
+        <a class="nav-cta" href="index.html#concierge">Book a Fitting</a>
+    </header>
+
+    <main>
+        <section class="race-hero">
+            <div>
+                <p class="eyebrow">Signature Race Weekend</p>
+                <h1>Nuit Vélo Invitational</h1>
+                <p>Staged under Montréal’s midnight skyline, the Nuit Vélo Invitational celebrates the cadence, couture, and courage of the VelaModa peloton. Expect precision time trials, champagne-neutral laps, and a finish-line salon for riders and patrons alike.</p>
+                <div class="race-meta">
+                    <div>
+                        <h3>When</h3>
+                        <p>June 14–16, 2026 · Twilight to Midnight</p>
+                    </div>
+                    <div>
+                        <h3>Where</h3>
+                        <p>Port de Montréal Circuit · 6.2 km stitched course</p>
+                    </div>
+                    <div>
+                        <h3>Field</h3>
+                        <p>40 invited athletes · 4 house teams · 1 couture champion</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <img src="PDP%20Images/Short%20Sleeve.png" alt="VelaModa athlete racing at night">
+            </div>
+        </section>
+
+        <section class="race-schedule">
+            <header>
+                <p class="eyebrow">Program</p>
+                <h2>Weekend Schedule</h2>
+            </header>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Event</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Friday</td>
+                        <td>Velodrome Prologue</td>
+                        <td>Timed laps inside the Olympic velodrome, setting seeding and unveiling team liveries.</td>
+                    </tr>
+                    <tr>
+                        <td>Saturday</td>
+                        <td>Midnight Circuit</td>
+                        <td>Street circuit race with live string quartet pacing and couture pit lane fittings.</td>
+                    </tr>
+                    <tr>
+                        <td>Sunday</td>
+                        <td>Champagne Neutral</td>
+                        <td>Social ride and closing banquet hosted by the VelaModa atelier concierge.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="click-race" id="click-race">
+            <header>
+                <p class="eyebrow">Vela Arcade</p>
+                <h2>Click-to-pedal showdown vs. Mags.</h2>
+                <p>Spam the <em>Click to Pedal</em> button to inch your doodle bike forward. Mags rides psychic aero lines, so buckle up for some chaotic sprinting.</p>
+            </header>
+            <div class="race-arena">
+                <div class="finish-line"></div>
+                <span class="track-label">Finish</span>
+                <div class="track">
+                    <div class="rider" data-rider="mags">
+                        <div class="rider-visual">
+                            <img class="rider-face" src="Mags.png" alt="Mags cheering on a bike">
+                            <div class="bike-scribble"></div>
+                        </div>
+                    </div>
+                    <div class="rider" data-rider="player">
+                        <div class="rider-visual">
+                            <div class="rider-face player-face">You</div>
+                            <div class="bike-scribble"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="race-controls">
+                <button class="primary" type="button" id="race-clicker">Click to Pedal</button>
+                <button class="secondary" type="button" id="race-reset">Reset the Shenanigans</button>
+                <div class="race-progress">
+                    <span>Mags: <strong id="mags-progress">0%</strong></span>
+                    <span>You: <strong id="player-progress">0%</strong></span>
+                </div>
+            </div>
+            <p class="race-status" id="race-status">Mags is stretching her legs. Click when ready.</p>
+        </section>
+
+        <section class="cta-bar">
+            <p class="eyebrow">Join the Ledger</p>
+            <h2>Secure your invite to ride or spectate.</h2>
+            <button class="primary">Request a Race Bib</button>
+            <button class="secondary" onclick="location.href='index.html#concierge'">Talk to Concierge</button>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <span class="logo">VelaModa</span>
+            <p>Maison-grade cycling apparel. Crafted in limited runs.</p>
+        </div>
+        <div class="footer-links">
+            <a href="#">Care Guide</a>
+            <a href="#">Boutiques</a>
+            <a href="#">Press</a>
+        </div>
+        <p class="copyright">© 2025 VelaModa Atelier</p>
+    </footer>
+
+    <script>
+        (function () {
+            const magsRider = document.querySelector('[data-rider="mags"]');
+            const playerRider = document.querySelector('[data-rider="player"]');
+            const track = document.querySelector('.click-race .track');
+            const statusEl = document.getElementById('race-status');
+            const magsProgressEl = document.getElementById('mags-progress');
+            const playerProgressEl = document.getElementById('player-progress');
+            const clicker = document.getElementById('race-clicker');
+            const resetBtn = document.getElementById('race-reset');
+
+            let magsProgress = 0;
+            let playerProgress = 0;
+            let raceInterval = null;
+            let raceStarted = false;
+            const finish = 100;
+
+            function getTrackWidth() {
+                const riderWidth = magsRider.getBoundingClientRect().width || 150;
+                return Math.max(0, track.clientWidth - riderWidth - 40);
+            }
+
+            function updateRiders() {
+                const maxWidth = getTrackWidth();
+                const magsOffset = (magsProgress / finish) * maxWidth;
+                const playerOffset = (playerProgress / finish) * maxWidth;
+                magsRider.style.setProperty('--offset', `${magsOffset}px`);
+                playerRider.style.setProperty('--offset', `${playerOffset}px`);
+                magsProgressEl.textContent = `${Math.min(100, Math.round(magsProgress))}%`;
+                playerProgressEl.textContent = `${Math.min(100, Math.round(playerProgress))}%`;
+            }
+
+            function magsVictory(because) {
+                clearInterval(raceInterval);
+                raceInterval = null;
+                raceStarted = false;
+                if (because === 'photo') {
+                    playerProgress = Math.min(playerProgress, finish - 4);
+                    magsProgress = finish;
+                } else {
+                    playerProgress = Math.min(playerProgress, finish - 8);
+                    magsProgress = finish;
+                }
+                if (because === 'photo') {
+                    statusEl.textContent = 'You almost had it, but Mags pulled a champagne wheelie across the line first!';
+                } else {
+                    statusEl.textContent = 'Mags disappears into hyperspace aero tunnels. She wins again. Naturally.';
+                }
+                updateRiders();
+            }
+
+            function startInterval() {
+                if (raceInterval) return;
+                raceInterval = setInterval(() => {
+                    let burst = Math.random() * 1.4 + 1.2; // steady tempo
+                    if (playerProgress >= 60 && magsProgress < playerProgress - 4) {
+                        burst += 3.5;
+                    }
+                    if (playerProgress >= 80) {
+                        burst += 6;
+                        statusEl.textContent = 'Mags activates secret espresso turbo. Uh oh.';
+                    }
+                    if (playerProgress >= finish - 6 && magsProgress < finish) {
+                        burst += 10;
+                    }
+                    magsProgress = Math.min(finish, magsProgress + burst);
+                    if (magsProgress >= finish) {
+                        magsVictory();
+                    }
+                    updateRiders();
+                }, 300);
+            }
+
+            function startRace() {
+                if (raceStarted) return;
+                raceStarted = true;
+                statusEl.textContent = 'Click like mad! Whoever hits 100% first wins (spoiler: it is Mags).';
+                startInterval();
+            }
+
+            clicker.addEventListener('click', () => {
+                startRace();
+                if (!raceStarted) return;
+                const pedal = (Math.random() * 5 + 3) / 2;
+                playerProgress = Math.min(finish, playerProgress + pedal);
+                statusEl.textContent = 'Nice click! But Mags is still smiling.';
+                if (playerProgress >= finish && magsProgress < finish) {
+                    magsVictory('photo');
+                    return;
+                }
+                updateRiders();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                clearInterval(raceInterval);
+                raceInterval = null;
+                raceStarted = false;
+                magsProgress = 0;
+                playerProgress = 0;
+                statusEl.textContent = 'Fresh legs! Mags is stretching her legs. Click when ready.';
+                updateRiders();
+            });
+
+            updateRiders();
+            window.addEventListener('resize', updateRiders);
+        })();
+    </script>
+</body>
+</html>
